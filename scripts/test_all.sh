@@ -6,4 +6,5 @@ echo "Running rust tests"
 cargo test -- --nocapture
 
 # examples
-cargo run --example simple
+# cargo run --example myapp
+cargo run --example myapp -- -c "./examples/myapp.yaml"

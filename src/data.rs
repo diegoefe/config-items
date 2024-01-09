@@ -10,6 +10,15 @@ pub fn get_app_id() -> Option<String> {
     ID.lock().unwrap().to_owned()
 }
 
+pub fn get_proxy_password_var() -> String {
+    format!("{}_PP", get_app_id().expect("To get app id!"))
+}
+
+/// Get name of default config filename
+pub fn get_filename() -> String {
+    format!("{}.yaml", get_app_id().expect("To get app id!").to_lowercase())
+}
+
 /// Set the id of using app
 pub fn set_app_id(id:&str) {
     *ID.lock().unwrap() = Some(id.to_string().to_uppercase())

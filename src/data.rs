@@ -5,7 +5,6 @@ lazy_static! {
     static ref ID: Mutex<Option<String>> = Mutex::new(None);
 }
 
-/// Get the id of using app
 pub fn get_app_id() -> Option<String> {
     ID.lock().unwrap().to_owned()
 }
@@ -14,9 +13,12 @@ pub fn get_proxy_password_var() -> String {
     format!("{}_PP", get_app_id().expect("To get app id!"))
 }
 
-/// Get name of default config filename
-pub fn get_filename() -> String {
+pub fn get_yaml_filename() -> String {
     format!("{}.yaml", get_app_id().expect("To get app id!").to_lowercase())
+}
+
+pub fn get_log_filename() -> String {
+    format!("{}.log", get_app_id().expect("To get app id!").to_lowercase())
 }
 
 /// Set the id of using app

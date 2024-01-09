@@ -5,7 +5,7 @@ use yaml_merge_keys::*;
 use std::fs::{self};
 use log::*;
 
-use crate::{get_app_id, get_filename};
+use crate::{get_app_id, get_yaml_filename};
 
 /// Deserialize YAML object from String
 pub fn read_yaml_from_string<T:for<'de> Deserialize<'de> >(str: &str) -> Result<T, Box<dyn Error>> {
@@ -42,7 +42,7 @@ pub fn get_config_file_name(resolver:&impl CFGResolver) -> String {
                     };
                     let file = match var(format!("{}_CONF_FILE", app_id).as_str()) {
                         Ok(f)=>f,
-                        Err(_)=>get_filename()
+                        Err(_)=>get_yaml_filename()
                     };
                     format!("{}/{}", dir, file)
                 }

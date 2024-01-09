@@ -1,5 +1,5 @@
 /target
-
 mkTar*
 *.swp
+*.log
 .vscode

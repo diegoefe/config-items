@@ -18,6 +18,7 @@ serde = { version = "1.0", features = ["derive"] }
 serde_yaml = "0.8"
 serde_derive = "1"
 log = "0.4"
+log4rs = "1.2"
 yaml-merge-keys = { version = "0.6", features = [ "serde_yaml" ] }
 # linked-hash-map = { version = "0.5.6", features = [ "serde", "serde_impl" ] }
 

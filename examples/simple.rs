@@ -1,4 +1,5 @@
 use config_items::*;
+use log::*;
 use std::error::Error;
 use serde::Deserialize;
 
@@ -6,6 +7,8 @@ use serde::Deserialize;
 struct Config {
     name: String,
     network: Option<Network>,
+    #[serde(default)] // use defaults if not present
+    logging: Logging,
 }
 
 struct MyConfig {}
@@ -36,6 +39,9 @@ fn main() -> Result<(), Box<dyn Error>> {
             println!("Final proxy url will be [{}]", proxy.get_url())
         }
     }
+    println!("Logging with: {:?}", cfg.logging);
+    cfg.logging.init()?;
+    info!("This will be logged");
     Ok(())
 }
 

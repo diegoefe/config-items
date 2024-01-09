@@ -12,7 +12,7 @@ pub fn get_app_id() -> Option<String> {
 
 /// Set the id of using app
 pub fn set_app_id(id:&str) {
-    *ID.lock().unwrap() = Some(id.to_string())
+    *ID.lock().unwrap() = Some(id.to_string().to_uppercase())
 }
 
 
@@ -27,5 +27,8 @@ mod tests {
         let my_id = "MYAPP";
         set_app_id(my_id);
         assert_eq!(get_app_id(), Some(my_id.to_string()));
+        let my_id2 = "mylowercaseapp";
+        set_app_id(my_id2);
+        assert_eq!(get_app_id(), Some(my_id2.to_string().to_uppercase()));
     }
 }

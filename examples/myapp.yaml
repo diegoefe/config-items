@@ -1,0 +1,7 @@
+name: ThisIsMyName
+network:
+  proxy:
+    url: myproxy
+    port: 8080
+    password: pepito
+skip_ssl_validation: true

@@ -47,6 +47,10 @@ impl CFGResolver for MyFixedResolver {
 
 fn main() -> Result<(), Box<dyn Error>> {
     set_app_id("MYAPP"); // mandatory setup!!
+    let (app_id, app_yaml, app_log) = get_app_vars();
+    println!("app vars: id=[{app_id}], yaml=[{app_yaml}], log=[{app_log}]");
+    let (v_pp, v_c_path, v_c_dir, v_c_file) = get_env_vars();
+    println!("env vars: proxy_password=[{v_pp}], config: path=[{v_c_path}], path=[{v_c_dir}], path=[{v_c_file}]");
     let matches = make_args().get_matches();
     // let cfg_file = get_config_file_name(&DefaultResolver{});
     let cfg_file = get_config_file_name(&MyArgResolver{matches:&matches});

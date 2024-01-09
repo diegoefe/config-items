@@ -47,7 +47,7 @@ impl Proxy {
             None
         }
     }
-    /// Construct the resulting proxy password
+    /// Obtain the resulting proxy url
     pub fn get_url(&self) -> String {
         let mut url = self.url.to_owned();
         if let Some(user) = self.get_user() {

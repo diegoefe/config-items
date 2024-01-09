@@ -21,6 +21,21 @@ pub fn get_log_filename() -> String {
     format!("{}.log", get_app_id().expect("To get app id!").to_lowercase())
 }
 
+/// Obtain defined "app" variables. Warning must be called AFTER set_app_id()!
+/// 
+/// Returns (id, yaml_filename, log_filename)
+pub fn get_app_vars() -> (String, String, String) {
+    (get_app_id().unwrap(), get_yaml_filename(), get_log_filename())
+}
+
+/// Obtain watched environment variables. Warning must be called AFTER set_app_id()!
+/// 
+/// Returns (proxy_password_var, conf_path_var, conf_dir_var, conf_file_var)
+pub fn get_env_vars() -> (String, String, String, String) {
+    let app_id = get_app_id().expect("To get app id!");
+    (get_proxy_password_var(), format!("{}_CONF_PATH", app_id), format!("{}_CONF_DIR", app_id), format!("{}_CONF_FILE", app_id))
+}
+
 /// Set the id of using app
 pub fn set_app_id(id:&str) {
     *ID.lock().unwrap() = Some(id.to_string().to_uppercase())

@@ -5,7 +5,7 @@ use yaml_merge_keys::*;
 use std::fs::{self};
 use log::*;
 
-use crate::{get_app_id, get_yaml_filename};
+use crate::{get_yaml_filename, get_env_vars};
 
 /// Deserialize YAML object from String
 pub fn read_yaml_from_string<T:for<'de> Deserialize<'de> >(str: &str) -> Result<T, Box<dyn Error>> {
@@ -39,16 +39,16 @@ pub fn get_config_file_name(resolver:&impl CFGResolver) -> String {
     let config = match resolver.get_from_argument() {
         Some(cfg)=>cfg.to_string(),
         None=>{
+            let (_, conf_path, conf_dir, conf_file)=get_env_vars();
             use std::env::*;
-            let app_id = get_app_id().expect("To get app id!");
-            match var(format!("{}_CONF_PATH", app_id).as_str()) {
+            match var(&conf_path) {
                 Ok(cfg)=>cfg,
                 Err(_)=>{
-                    let dir = match var(format!("{}_CONF_DIR", app_id).as_str()) {
+                    let dir = match var(&conf_dir) {
                         Ok(d) => d,
                         Err(_)=>".".to_string()
                     };
-                    let file = match var(format!("{}_CONF_FILE", app_id).as_str()) {
+                    let file = match var(&conf_file) {
                         Ok(f)=>f,
                         Err(_)=>get_yaml_filename()
                     };

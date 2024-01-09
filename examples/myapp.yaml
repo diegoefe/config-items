@@ -7,4 +7,4 @@ network:
 skip_ssl_validation: true
 logging:
   file_name: mycustom.log
-  level: trace # error/debug/trace
+  level: trace # info/error/debug/trace, defaults to info

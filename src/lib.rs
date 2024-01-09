@@ -3,11 +3,14 @@
 /// Defines global state for this library
 mod data;
 use data::{
-    get_app_id,
     get_proxy_password_var,
     get_yaml_filename
 };
-pub use data::set_app_id;
+pub use data::{
+    set_app_id,
+    get_app_vars,
+    get_env_vars
+};
 
 /// Defines common network configurations
 mod net;

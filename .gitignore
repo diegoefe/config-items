@@ -1,1 +1,5 @@
 /target
+
+mkTar*
+*.swp
+.vscode

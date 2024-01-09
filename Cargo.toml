@@ -1,0 +1,35 @@
+[package]
+name = "config-items"
+version = "0.0.1"
+edition = "2021"
+authors = ["Diego Florio <diegoefe@gmail.com>"]
+license = "MIT"
+description = "A library with common configuration items"
+readme = "README.md"
+homepage = "https://github.com/diegoefe/config-items"
+repository = "https://github.com/diegoefe/config-items"
+categories = ["config"]
+keywords = ["config", "configuration", "items"]
+documentation = "https://docs.rs/config-items/"
+rust-version = "1.62" # typetag requires this mininum version!
+
+[dependencies]
+lazy_static = "1.4.0"
+# serde = { version = "1.0", features = ["derive"] }
+# serde_yaml = "0.8"
+# yaml-merge-keys = { version = "0.6", features = [ "serde_yaml" ] }
+# serde_derive = "1"
+# linked-hash-map = { version = "0.5.6", features = [ "serde", "serde_impl" ] }
+# typetag = "0.2"
+
+[dev-dependencies]
+# log = "0.4"
+# regex = "1.10.2"
+
+[lib]
+name = "config_items"
+path = "src/lib.rs"
+# doc-scrape-examples = false
+
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu"]

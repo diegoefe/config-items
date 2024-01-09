@@ -4,7 +4,7 @@
   [![LICENSE](https://img.shields.io/crates/l/config-items.svg)](https://github.com/diegoefe/config-items/blob/main/LICENSE)
   [![docs](https://docs.rs/config-items/badge.svg)](https://docs.rs/config-items)
 
-config-items is A library with common configuration items.
+config-items is a library with common configuration items and utility functions.
 
 See [examples](https://github.com/diegoefe/config-items/tree/main/examples) for usage.
 

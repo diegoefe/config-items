@@ -4,7 +4,7 @@ version = "0.1.1"
 edition = "2021"
 authors = ["Diego Florio <diegoefe@gmail.com>"]
 license = "MIT"
-description = "A library with common configuration items"
+description = "A library with common configuration items and utility functions"
 readme = "README.md"
 homepage = "https://github.com/diegoefe/config-items"
 repository = "https://github.com/diegoefe/config-items"
@@ -23,7 +23,7 @@ yaml-merge-keys = { version = "0.6", features = [ "serde_yaml" ] }
 # linked-hash-map = { version = "0.5.6", features = [ "serde", "serde_impl" ] }
 
 [dev-dependencies]
-# regex = "1.10.2"
+clap = "3"
 
 [lib]
 name = "config_items"

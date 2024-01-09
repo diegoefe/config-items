@@ -3,6 +3,7 @@ use log::*;
 
 use crate::get_proxy_password_var;
 
+/// Proxy configuration
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Proxy {
     pub url: String,
@@ -26,6 +27,7 @@ impl Proxy {
             "USER"
         }
     }
+    /// Obtain deduced user
     pub fn get_user(&self) -> Option<String> {
         if let Some(user) = &self.user {
             Some(user.to_owned())
@@ -35,6 +37,7 @@ impl Proxy {
             None
         }
     }
+    /// Obtain deduced password
     pub fn get_password(&self) -> Option<String> {
         if let Some(pass) = &self.password {
             Some(pass.to_owned())
@@ -44,6 +47,7 @@ impl Proxy {
             None
         }
     }
+    /// Construct the resulting proxy password
     pub fn get_url(&self) -> String {
         let mut url = self.url.to_owned();
         if let Some(user) = self.get_user() {
@@ -69,6 +73,8 @@ impl Proxy {
         url
     }
 }
+
+/// Networking configuration
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Network {
     pub proxy: Option<Proxy>,
@@ -76,6 +82,7 @@ pub struct Network {
 }
 
 impl Network {
+    /// Obtain resulting SSL validation action to take
     pub fn skip_ssl_validation(&self) -> bool {
         if let Some(ssv) = self.skip_ssl_validation {
             ssv

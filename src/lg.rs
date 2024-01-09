@@ -14,6 +14,7 @@ fn default_level() -> String {
     "info".into()
 }
 
+/// Logging configuration
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Logging {
     pub file_name: String,
@@ -21,6 +22,7 @@ pub struct Logging {
     pub level: String
 }
 impl Logging {
+    /// Initialize using current configuration
     pub fn init(&self) -> Result<(), Box<dyn Error>> {
         create_log_config_and_init(self)?;
         Ok(())
@@ -35,6 +37,7 @@ impl Default for Logging {
     }
 }
 
+/// Create a logging configuration
 pub fn create_log_config(lg:&Logging)  -> Result< LogConfig, Box<dyn Error>>  {
     const PATTERN:&str = "[{d(%Y-%m-%d %H:%M:%S)} {l}] {m}{n}";
     let level_filter;
@@ -73,6 +76,7 @@ pub fn create_log_config(lg:&Logging)  -> Result< LogConfig, Box<dyn Error>>  {
     Ok(config)
 }
 
+/// Create a logging configuration and initialize logger
 fn create_log_config_and_init(lg:&Logging)  -> Result<(), Box<dyn Error>>  {
     let lcfg = create_log_config(lg)?;
     match log4rs::init_config(lcfg) {

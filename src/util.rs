@@ -23,10 +23,18 @@ pub fn read_yaml_from_file<T:for<'de> Deserialize<'de>, P: AsRef<Path>>(path: P)
     read_yaml_from_string(&sfile)
 }
 
+/// trait that asks for config filename (takes precedence over other guessings)
 pub trait CFGResolver {
     fn get_from_argument(&self) -> Option<&str>;
 }
 
+/// Default resolver that does not resolves to any alterantive/custom configuration filename
+pub struct DefaultResolver {}
+impl CFGResolver for DefaultResolver {
+    fn get_from_argument(&self) -> Option<&str> { None }
+}
+
+/// Get name of config file resulting of various options
 pub fn get_config_file_name(resolver:&impl CFGResolver) -> String {
     let config = match resolver.get_from_argument() {
         Some(cfg)=>cfg.to_string(),

@@ -6,8 +6,6 @@
 
 config-items is a library with common configuration items and utility functions.
 
-See [examples](https://github.com/diegoefe/config-items/tree/main/examples) for usage.
-
 ## Install
 
 ```toml
@@ -19,7 +17,9 @@ config-items = "0.1"
 ## Usage
 Define your own "Config" struct and add predefined items from this library.
 
-Sample configuration for this example is [here](examples/myapp.yaml).
+All examples are [here](https://github.com/diegoefe/config-items/tree/main/examples).
+
+Sample configuration for the following example is [here](examples/myapp.yaml).
 
 ```rust
 use config_items::*;
@@ -93,6 +93,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 }
 
 ```
+
 
 ## License
 

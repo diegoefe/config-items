@@ -46,7 +46,8 @@ impl CFGResolver for MyFixedResolver {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    set_app_id("MYAPP"); // mandatory setup!!
+    // This is the recommended setup!!!
+    // set_app_id("MYAPP"); // Without this call an attempt to deduce the id from the current executable name will be made
     let (app_id, app_yaml, app_log) = get_app_vars();
     println!("app vars: id=[{app_id}], yaml=[{app_yaml}], log=[{app_log}]");
     let (v_pp, v_c_path, v_c_dir, v_c_file) = get_env_vars();

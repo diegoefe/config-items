@@ -7,6 +7,7 @@ use data::{
     get_yaml_filename
 };
 pub use data::{
+    get_app_id,
     set_app_id,
     get_app_vars,
     get_env_vars

@@ -5,8 +5,24 @@ lazy_static! {
     static ref ID: Mutex<Option<String>> = Mutex::new(None);
 }
 
+/// Get Application id
+/// 
+/// If no a previous call to set_app_id() was issued, an attempt to deduce the id from the current executable name
 pub fn get_app_id() -> Option<String> {
-    ID.lock().unwrap().to_owned()
+    // ID.lock().unwrap().to_owned()
+    let oid = ID.lock().unwrap().to_owned();
+    if oid.is_some() {
+        oid
+    } else {
+        let exe = std::env::current_exe()
+            .ok()?
+            .file_name()?
+            .to_str()?
+            .to_owned()
+            .to_uppercase();
+        let parts:Vec<&str> = exe.split(".").collect();
+        Some(parts[0].to_string())
+    }
 }
 
 pub fn get_proxy_password_var() -> String {
@@ -48,8 +64,8 @@ mod tests {
 
     #[test]
     fn test_data() {
-        let id = get_app_id();
-        assert_eq!(id, None);
+        // let id = get_app_id();
+        // assert_eq!(id, None);
         let my_id = "MYAPP";
         set_app_id(my_id);
         assert_eq!(get_app_id(), Some(my_id.to_string()));

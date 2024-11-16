@@ -7,6 +7,7 @@ use log4rs::encode::pattern::PatternEncoder;
 use log4rs::config::Config as LogConfig;
 use log4rs::config::{Appender, Logger, Root};
 // use log::*;
+use std::env;
 
 use crate::data::get_log_filename;
 
@@ -37,18 +38,26 @@ impl Default for Logging {
     }
 }
 
+fn match_error_string(es:&str) -> Result<LevelFilter, Box<dyn Error>> {
+    let ll = match es {
+        "debug" => LevelFilter::Debug,
+        "info" => LevelFilter::Info,
+        "warn" => LevelFilter::Warn,
+        "error" => LevelFilter::Error,
+        "trace" => LevelFilter::Trace,
+        _ => return Err(Box::from(format!("Invalid log level '{}'", es)))
+    };
+    Ok(ll)
+}
+
 /// Create a logging configuration
 pub fn create_log_config(lg:&Logging)  -> Result< LogConfig, Box<dyn Error>>  {
     const PATTERN:&str = "[{d(%Y-%m-%d %H:%M:%S)} {l}] {m}{n}";
-    let level_filter;
-        match lg.level.as_str() {
-            "debug" => level_filter = LevelFilter::Debug,
-            "info" => level_filter = LevelFilter::Info,
-            "warn" => level_filter = LevelFilter::Warn,
-            "error" => level_filter = LevelFilter::Error,
-            "trace" => level_filter = LevelFilter::Trace,
-            _ => panic!("Invalid log level '{}'", lg.level)
-        }
+
+    let level_filter = match env::var("RUST_LOG") {
+        Ok(rl) => match_error_string(&rl)?,
+        Err(_) => match_error_string(lg.level.as_str())?
+    };
 
     let stdout = ConsoleAppender::builder()
             .encoder(Box::new(PatternEncoder::new(PATTERN)))

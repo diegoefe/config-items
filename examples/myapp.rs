@@ -54,7 +54,12 @@ fn main() -> Result<(), Box<dyn Error>> {
     println!("env vars: proxy_password=[{v_pp}], config: path=[{v_c_path}], path=[{v_c_dir}], path=[{v_c_file}]");
     let matches = make_args().get_matches();
     // let cfg_file = get_config_file_name(&DefaultResolver{});
-    let cfg_file = get_config_file_name(&MyArgResolver{matches:&matches});
+    let cfg_file = if matches.contains_id("config") {
+        get_config_file_name(&MyArgResolver{ matches:&matches})
+    } else {
+        get_config_file_name(&MyFixedResolver{})
+    };
+    // let cfg_file = get_config_file_name(resolver.as_ref());
     // let cfg_file = get_config_file_name(&MyFixedResolver{});
     println!("Using config file [{cfg_file}]");
     let cfg:Config = read_config_from_yaml(&cfg_file)?;
@@ -75,7 +80,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
     println!("Logging with: {:?}", cfg.logging);
     cfg.logging.init()?;
+    error!("This is an ERROR");
     info!("This will be logged");
+    debug!("This is DEBUG");
+    trace!("This is TRACE");
+    
     Ok(())
 }
 

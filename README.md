@@ -48,9 +48,9 @@ or (all in one)
 #[derive(Deserialize, Debug)]
 struct Config {
     name: String,
-    network: Option<Network>, // from config_items
+    network: Option<Network>,
     #[serde(default)] // use defaults if not present
-    logging: Logging, // from config_items
+    logging: Logging,
 }
 
 struct MyArgResolver<'a> {
@@ -62,16 +62,32 @@ impl<'a> CFGResolver for MyArgResolver<'a> {
     }
 }
 
+struct MyFixedResolver {}
+impl CFGResolver for MyFixedResolver {
+    fn get_from_argument(&self) -> Option<&str> {
+        Some("./examples/myapp.yaml")
+    }
+}
+
 fn main() -> Result<(), Box<dyn Error>> {
     // This is the recommended setup!!!
-    set_app_id("MYAPP"); // Without this call an attempt to deduce the id from the current executable name will be made
+    // set_app_id("MYAPP"); // Without this call an attempt to deduce the id from the current executable name will be made
     let (app_id, app_yaml, app_log) = get_app_vars();
     println!("app vars: id=[{app_id}], yaml=[{app_yaml}], log=[{app_log}]");
     let (v_pp, v_c_path, v_c_dir, v_c_file) = get_env_vars();
     println!("env vars: proxy_password=[{v_pp}], config: path=[{v_c_path}], path=[{v_c_dir}], path=[{v_c_file}]");
     let matches = make_args().get_matches();
-    let cfg_file = get_config_file_name(&MyArgResolver{matches:&matches});
+    // let cfg_file = get_config_file_name(&DefaultResolver{});
+    let cfg_file = if matches.contains_id("config") {
+        get_config_file_name(&MyArgResolver{ matches:&matches})
+    } else {
+        get_config_file_name(&MyFixedResolver{})
+    };
+    // let cfg_file = get_config_file_name(resolver.as_ref());
+    // let cfg_file = get_config_file_name(&MyFixedResolver{});
+    println!("Using config file [{cfg_file}]");
     let cfg:Config = read_config_from_yaml(&cfg_file)?;
+    // println!("Config is [{cfg:#?}]");
     println!("Using config [{}]", cfg.name);
     if let Some(net) = cfg.network {
         println!(" Got network settings: validate ssl:{}", net.skip_ssl_validation());
@@ -88,10 +104,24 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
     println!("Logging with: {:?}", cfg.logging);
     cfg.logging.init()?;
+    error!("This is an ERROR");
     info!("This will be logged");
+    debug!("This is DEBUG");
+    trace!("This is TRACE");
+    
     Ok(())
 }
 
+```
+
+To run the example:
+```bash
+# using MyFixedResolver
+$ cargo run cargo run --example myapp
+# using MyArgResolver
+$ cargo run --example myapp -- -c examples/myapp.yaml
+# Override myapp.yaml log level setting
+$ RUST_LOG=debug cargo run --example myapp -- -c examples/myapp.yaml
 ```
 
 

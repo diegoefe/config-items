@@ -20,7 +20,8 @@ fn default_level() -> String {
 pub struct Logging {
     pub file_name: String,
     #[serde(default="default_level")]
-    pub level: String
+    pub level: String,
+    pub file_logging_disabled: Option<bool>,
 }
 impl Logging {
     /// Initialize using current configuration
@@ -34,11 +35,12 @@ impl Default for Logging {
         Logging {
             file_name: get_log_filename().into(),
             level: default_level(),
+            file_logging_disabled: None,
         }
     }
 }
 
-fn match_error_string(es:&str) -> Result<LevelFilter, Box<dyn Error>> {
+fn level_filter_from_string(es:&str) -> Result<LevelFilter, Box<dyn Error>> {
     let ll = match es {
         "debug" => LevelFilter::Debug,
         "info" => LevelFilter::Info,
@@ -54,34 +56,59 @@ fn match_error_string(es:&str) -> Result<LevelFilter, Box<dyn Error>> {
 pub fn create_log_config(lg:&Logging)  -> Result< LogConfig, Box<dyn Error>>  {
     const PATTERN:&str = "[{d(%Y-%m-%d %H:%M:%S)} {l}] {m}{n}";
 
-    let level_filter = match env::var("RUST_LOG") {
-        Ok(rl) => match_error_string(&rl)?,
-        Err(_) => match_error_string(lg.level.as_str())?
+    let no_file_logging = if let Some(fld) = &lg.file_logging_disabled {
+        *fld
+    } else {
+        false
     };
 
-    let stdout = ConsoleAppender::builder()
-            .encoder(Box::new(PatternEncoder::new(PATTERN)))
-        .build();
+    let enable_file_logging = ! no_file_logging;
 
-    let requests = FileAppender::builder()
-            .encoder(Box::new(PatternEncoder::new(PATTERN)))
-        .build(&lg.file_name)?;
+    let level_filter = match env::var("RUST_LOG") {
+        Ok(rl) => level_filter_from_string(&rl)?,
+        Err(_) => level_filter_from_string(lg.level.as_str())?
+    };
 
-    let config = LogConfig::builder()
-        .appender(Appender::builder()
-            .build("stdout", Box::new(stdout)))
-        .appender(Appender::builder()
-             .build("requests", Box::new(requests)))
-        .logger(Logger::builder()
-            .build("app::backend::db", level_filter))
-        .logger(Logger::builder()
-                .appender("requests")
-                .additive(false)
-            .build("app::requests", level_filter))
-        .build(Root::builder()
-                .appender("stdout")
-                .appender("requests")
-            .build(level_filter))?;
+    let config = if enable_file_logging {
+        let stdout = ConsoleAppender::builder()
+            .encoder(Box::new(PatternEncoder::new(PATTERN)))
+            .build();
+
+        let requests = FileAppender::builder()
+                .encoder(Box::new(PatternEncoder::new(PATTERN)))
+            .build(&lg.file_name)?;
+
+        let cfg = LogConfig::builder()
+            .appender(Appender::builder()
+                .build("stdout", Box::new(stdout)))
+            .appender(Appender::builder()
+                .build("requests", Box::new(requests)))
+            .logger(Logger::builder()
+                .build("app::backend::db", level_filter))
+            .logger(Logger::builder()
+                    .appender("requests")
+                    .additive(false)
+                .build("app::requests", level_filter))
+            .build(Root::builder()
+                    .appender("stdout")
+                    .appender("requests")
+                .build(level_filter))?;
+        cfg
+    } else {
+        let stdout = ConsoleAppender::builder()
+            .encoder(Box::new(PatternEncoder::new(PATTERN)))
+            .build();
+        let cfg = LogConfig::builder()
+            .appender(Appender::builder()
+                .build("stdout", Box::new(stdout)))
+            .logger(Logger::builder()
+                .build("app::backend::db", level_filter))
+            .build(Root::builder()
+                    .appender("stdout")
+                .build(level_filter))?;
+        cfg
+    };
+
     Ok(config)
 }
 

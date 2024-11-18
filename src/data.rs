@@ -7,7 +7,7 @@ lazy_static! {
 
 /// Get Application id
 /// 
-/// If no a previous call to set_app_id() was issued, an attempt to deduce the id from the current executable name
+/// If no a previous call to set_app_id() was issued, an attempt to deduce the id from the current executable name is made
 pub fn get_app_id() -> Option<String> {
     // ID.lock().unwrap().to_owned()
     let oid = ID.lock().unwrap().to_owned();

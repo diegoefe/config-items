@@ -8,3 +8,4 @@ skip_ssl_validation: true
 logging:
   file_name: mycustom.log
   level: trace # info/error/debug/trace, defaults to info
+  # file_logging_disabled: true # optional, default to false

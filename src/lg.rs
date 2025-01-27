@@ -117,6 +117,6 @@ fn create_log_config_and_init(lg:&Logging)  -> Result<(), Box<dyn Error>>  {
     let lcfg = create_log_config(lg)?;
     match log4rs::init_config(lcfg) {
         Ok(_)=> Ok(()),
-        Err(_) => todo!(),
+        Err(e) => Err(Box::new(e)),
     }        
 }

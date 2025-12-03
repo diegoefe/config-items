@@ -1,14 +1,13 @@
 use serde::Deserialize;
-use std::error::Error;
 use std::path::Path;
 use yaml_merge_keys::*;
 use std::fs::{self};
 use log::*;
 
-use crate::{get_yaml_filename, get_env_vars};
+use crate::{get_env_vars, get_yaml_filename, res::SRes};
 
 /// Deserialize YAML object from String
-pub fn read_yaml_from_string<T:for<'de> Deserialize<'de> >(str: &str) -> Result<T, Box<dyn Error>> {
+pub fn read_yaml_from_string<T:for<'de> Deserialize<'de> >(str: &str) -> SRes<T> {
     use yaml_merge_keys::serde_yaml::Value;
     let sy:Value = serde_yaml::from_str(str)?;
     let v: Result<Value, serde_yaml::Error> = serde_yaml::to_value(sy);
@@ -18,7 +17,7 @@ pub fn read_yaml_from_string<T:for<'de> Deserialize<'de> >(str: &str) -> Result<
 }
 
 /// Read file into String and deserialize YAML object
-pub fn read_yaml_from_file<T:for<'de> Deserialize<'de>, P: AsRef<Path>>(path: P) -> Result<T, Box<dyn Error>> {
+pub fn read_yaml_from_file<T:for<'de> Deserialize<'de>, P: AsRef<Path>>(path: P) -> SRes<T> {
     let sfile:String = fs::read_to_string(path)?.parse()?;
     read_yaml_from_string(&sfile)
 }

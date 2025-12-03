@@ -10,6 +10,7 @@ use log4rs::config::{Appender, Logger, Root};
 use std::env;
 
 use crate::data::get_log_filename;
+use crate::res::ERes;
 
 fn default_level() -> String {
     "info".into()
@@ -25,7 +26,7 @@ pub struct Logging {
 }
 impl Logging {
     /// Initialize using current configuration
-    pub fn init(&self) -> Result<(), Box<dyn Error>> {
+    pub fn init(&self) -> ERes<()> {
         create_log_config_and_init(self)?;
         Ok(())
     }
@@ -53,7 +54,7 @@ fn level_filter_from_string(es:&str) -> Result<LevelFilter, Box<dyn Error>> {
 }
 
 /// Create a logging configuration
-pub fn create_log_config(lg:&Logging)  -> Result< LogConfig, Box<dyn Error>>  {
+pub fn create_log_config(lg:&Logging)  -> ERes<LogConfig>  {
     const PATTERN:&str = "[{d(%Y-%m-%d %H:%M:%S)} {l}] {m}{n}";
 
     let no_file_logging = if let Some(fld) = &lg.file_logging_disabled {
@@ -113,7 +114,7 @@ pub fn create_log_config(lg:&Logging)  -> Result< LogConfig, Box<dyn Error>>  {
 }
 
 /// Create a logging configuration and initialize logger
-fn create_log_config_and_init(lg:&Logging)  -> Result<(), Box<dyn Error>>  {
+fn create_log_config_and_init(lg:&Logging)  -> ERes<()>  {
     let lcfg = create_log_config(lg)?;
     match log4rs::init_config(lcfg) {
         Ok(_)=> Ok(()),

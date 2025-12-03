@@ -31,3 +31,6 @@ pub use util::{
     read_yaml_from_file as read_config_from_yaml,
     get_config_file_name,
 };
+
+/// Defines handy types and functions
+pub mod res;

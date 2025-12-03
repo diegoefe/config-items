@@ -1,6 +1,5 @@
-use config_items::*;
+use config_items::{res::SRes, *};
 use log::*;
-use std::error::Error;
 use serde::Deserialize;
 use clap::{Arg, Command, ArgMatches};
 
@@ -45,7 +44,7 @@ impl CFGResolver for MyFixedResolver {
     }
 }
 
-fn main() -> Result<(), Box<dyn Error>> {
+fn main() -> SRes<()> {
     // This is the recommended setup!!!
     // set_app_id("MYAPP"); // Without this call an attempt to deduce the id from the current executable name will be made
     let (app_id, app_yaml, app_log) = get_app_vars();
@@ -79,7 +78,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
     }
     println!("Logging with: {:?}", cfg.logging);
-    cfg.logging.init()?;
+    cfg.logging.init().expect("to initialize logging");
     error!("This is an ERROR");
     info!("This will be logged");
     debug!("This is DEBUG");

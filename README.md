@@ -69,7 +69,7 @@ impl CFGResolver for MyFixedResolver {
     }
 }
 
-fn main() -> Result<(), Box<dyn Error>> {
+fn main() -> SRes<()> {
     // This is the recommended setup!!!
     // set_app_id("MYAPP"); // Without this call an attempt to deduce the id from the current executable name will be made
     let (app_id, app_yaml, app_log) = get_app_vars();

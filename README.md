@@ -11,7 +11,7 @@ config-items is a library with common configuration items and utility functions.
 ```toml
 # Cargo.toml
 [dependencies]
-config-items = "0.1"
+config-items = "0.2"
 ```
 
 ## Usage

@@ -11,6 +11,25 @@ pub type ERes<T> = std::result::Result<T, BoxErr>;
 /// Thread-safe Result template
 pub type SRes<T> = std::result::Result<T, Box<StdErrSS>>;
 
+// Magic trait to cast a ERes<T> into a SRes<T>
+pub trait CastSRes<T> {
+    fn into_sres(self) -> SRes<T>;
+}
+
+// Cast a ERes<T> into a SRes<T>
+impl<T> CastSRes<T> for ERes<T> {
+    fn into_sres(self) -> SRes<T> {
+        self.map_err(|e| Box::from(e.to_string()) as Box<StdErrSS>)
+    }
+}
+
+// It does nothing, already compatible
+impl<T> CastSRes<T> for SRes<T> {
+    fn into_sres(self) -> SRes<T> {
+        self
+    }
+}
+
 /// Fail if second parameter is None
 pub fn get_some<T>(name:&str, opt:Option<T>) -> ERes<T> {
     match opt {
@@ -25,14 +44,7 @@ pub fn get_some<T>(name:&str, opt:Option<T>) -> ERes<T> {
 
 /// Fail if second parameter is None, thread-safely
 pub fn get_somes<T>(name:&str, opt:Option<T>) -> SRes<T> {
-    match opt {
-        Some(v)=>Ok(v),
-        None=>{
-            let e = format!("get_somes({name}) must be Some()");
-            error!("{e}");
-            Err(e.into())
-        }
-    }
+    Ok(get_some(name, opt).into_sres()?)
 }
 
 #[cfg(test)]
@@ -64,5 +76,19 @@ mod tests {
 
         assert!(get_some("none", none()).is_err());
         assert!(get_some("some", some()).is_ok());
+    }
+
+    fn returns_eres() -> ERes<()> {
+        Ok(())
+    }
+
+    fn returns_sres() -> SRes<()> {
+        Ok(())
+    }
+
+    #[test]
+    fn test_into_sres() -> SRes<()> {
+        returns_sres()?;
+        Ok(returns_eres().into_sres()?)
     }
 }

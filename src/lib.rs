@@ -34,3 +34,6 @@ pub use util::{
 
 /// Defines handy types and functions
 pub mod res;
+
+/// Shared yaml_merge_keys
+pub extern crate yaml_merge_keys;

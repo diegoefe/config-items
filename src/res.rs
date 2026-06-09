@@ -30,6 +30,25 @@ impl<T> CastSRes<T> for SRes<T> {
     }
 }
 
+// Magic trait to cast a ERes<T> into a SRes<T>
+pub trait CastERes<T> {
+    fn into_eres(self) -> ERes<T>;
+}
+
+// Cast a ERes<T> into a SRes<T>
+impl<T> CastERes<T> for SRes<T> {
+    fn into_eres(self) -> ERes<T> {
+        self.map_err(|e| Box::from(e.to_string()) as Box<StdErr>)
+    }
+}
+
+// It does nothing, already compatible
+impl<T> CastERes<T> for ERes<T> {
+    fn into_eres(self) -> ERes<T> {
+        self
+    }
+}
+
 /// Fail if second parameter is None
 pub fn get_some<T>(name:&str, opt:Option<T>) -> ERes<T> {
     match opt {
@@ -90,5 +109,11 @@ mod tests {
     fn test_into_sres() -> SRes<()> {
         returns_sres()?;
         Ok(returns_eres().into_sres()?)
+    }
+
+    #[test]
+    fn test_into_eres() -> ERes<()> {
+        returns_eres()?;
+        Ok(returns_sres().into_eres()?)
     }
 }

@@ -18,7 +18,9 @@ mod net;
 pub use net::{Network, Proxy};
 
 /// Defines a logging configuration
+#[cfg(feature = "logging")]
 mod lg;
+#[cfg(feature = "logging")]
 pub use lg::{
     Logging,
     create_log_config,

@@ -1,3 +1,4 @@
+#[cfg(feature = "logging")]
 use log::error;
 
 /// Standard error
@@ -55,6 +56,7 @@ pub fn get_some<T>(name:&str, opt:Option<T>) -> ERes<T> {
         Some(v)=>Ok(v),
         None=>{
             let e = format!("get_some({name}) must be Some()");
+            #[cfg(feature = "logging")]
             error!("{e}");
             Err(e.into())
         }

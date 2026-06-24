@@ -2,6 +2,7 @@ use serde::Deserialize;
 use std::path::Path;
 use yaml_merge_keys::*;
 use std::fs::{self};
+#[cfg(feature = "logging")]
 use log::*;
 
 use crate::{get_env_vars, get_yaml_filename, res::SRes};
@@ -56,6 +57,7 @@ pub fn get_config_file_name(resolver:&impl CFGResolver) -> String {
             }
         }
     };
+    #[cfg(feature = "logging")]
     debug!("Using config file '{config}'");
     config
 }

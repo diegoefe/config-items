@@ -1,4 +1,5 @@
 use serde::{Serialize, Deserialize};
+#[cfg(feature = "logging")]
 use log::*;
 
 use crate::get_proxy_password_var;
@@ -68,6 +69,7 @@ impl Proxy {
                                 host,
                                 self.port);
             }
+            #[cfg(feature = "logging")]
             debug!("proxy url [{url}]");
         }
         url

@@ -11,7 +11,14 @@ config-items is a library with common configuration items and utility functions.
 ```toml
 # Cargo.toml
 [dependencies]
-config-items = "0.2"
+config-items = "0.3"
+```
+
+if you want to disable the **logging** feature:
+```toml
+# Cargo.toml
+[dependencies]
+config-items = { version = "0.3", default-features = false }
 ```
 
 ## Usage
